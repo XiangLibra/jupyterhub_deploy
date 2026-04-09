@@ -16,7 +16,7 @@ services:
       # 指定網路名稱給 config 讀取
       DOCKER_NETWORK_NAME: jupyterhub-network
     ports:
-      - "8000:8000"
+      - "8001:8000"
     networks:
       - jupyterhub-network
     restart: always

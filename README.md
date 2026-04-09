@@ -31,7 +31,7 @@
 ### 安裝docker
 ``` bash
 # 安裝 Docker 引擎與 Docker Compose
-sudo apt install -y docker.io docker-compose
+sudo apt install -y docker.io docker-compose-v2
 
 # 啟動 Docker 服務，並設定為開機自動啟動
 sudo systemctl start docker
@@ -179,17 +179,17 @@ networks:
 在該專案資料夾下，執行以下指令啟動：
 
 ```bash
-sudo docker-compose up -d
+sudo docker compose up -d
 ```
 
 檢查服務是否健康運行 (`State` 應顯示為 `Up`)：
 ```bash
-sudo docker-compose ps
+sudo docker compose ps
 ```
 
 看執行日誌
 ```bash
-sudo docker-compose logs -f
+sudo docker compose logs -f
 ```
 ---
 
