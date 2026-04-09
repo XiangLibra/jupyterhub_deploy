@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  jupyterhub:
+    build: .
+    container_name: jupyterhub
+    # 加入下面這行，強制指定設定檔路徑！
+    command: jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+    volumes:
+      # 為了讓 Hub 能控制底層 Docker 生成新容器，必須掛載 docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
+      # 掛載 JupyterHub 的資料庫與設定檔
+      - ./jupyterhub_data:/srv/jupyterhub
+      - ./jupyterhub_config.py:/srv/jupyterhub/jupyterhub_config.py
+    environment:
+      # 指定網路名稱給 config 讀取
+      DOCKER_NETWORK_NAME: jupyterhub-network
+    ports:
+      - "8000:8000"
+    networks:
+      - jupyterhub-network
+    restart: always
+
+networks:
+  jupyterhub-network:
+    name: jupyterhub-network
