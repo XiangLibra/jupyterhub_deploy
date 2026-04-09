@@ -257,3 +257,56 @@ python -m ipykernel install --user --name myenv --display-name "Python (py310)"
    ```
    系統會問你 `[y/N]`，輸入 `y` 即可刪除。
 
+
+
+
+
+# admin 來管理觀看容器執行狀況
+
+
+
+
+1. **JupyterHub 主控台容器**：負責管理登入、註冊、分配資源的「大腦」（名字通常叫 `jupyterhub`）。
+2. **使用者專屬運算容器**：你登入後點擊 "Start My Server" 所產生，真正掛載 96GB GPU 且用來寫程式的「個人房間」（名字通常叫 `jupyter-你的帳號名`，例如 `jupyter-admin`）。
+
+以下是進入容器的具體方法：
+
+### 方法一：從伺服器終端機進入 (標準 Docker 做法)
+
+這是最高權限的做法，適用於你想進入任何容器修改底層設定時。
+
+**第 1 步：找出容器的正確名稱**
+在你的伺服器終端機輸入以下指令，列出目前所有正在運作的容器：
+```bash
+sudo docker ps
+```
+你會在最右邊的 `NAMES` 欄位看到容器的名字，例如 `jupyterhub` 或 `jupyter-admin`。
+
+**第 2 步：執行 `docker exec` 指令進入容器**
+假設你想進入 `admin` 這個使用者的運算容器，請輸入：
+```bash
+sudo docker exec -it jupyter-admin /bin/bash
+```
+* *(如果是想進入主控台，就把名字換成 `jupyterhub`)*
+* `exec`：代表要在運作中的容器內執行指令。
+* `-it`：代表開啟一個互動式的終端機介面。
+* `/bin/bash`：代表你要啟動 Bash 殼層（這就是 Linux 終端機的程式）。
+
+**✅ 成功畫面**：
+你的命令列開頭會突然改變，變成類似 `jovyan@a1b2c3d4e5f6:~$`，這代表你已經「穿越」進到容器內部了！
+*(註：`jovyan` 是官方 Jupyter Image 預設的使用者名稱)*
+
+**🚪 如何離開容器？**
+只要輸入 `exit` 並按下 Enter，就會退回到你原本伺服器的終端機了。
+
+---
+
+### 方法二：直接從網頁版 JupyterLab 進入 (最簡單、最常用)
+
+如果你只是想要安裝 Python 套件（例如 `pip install`、`conda install`）、操作 Git，或是執行 `nvidia-smi` 來監控你那張 96GB 的 GPU，**其實你根本不需要從伺服器底層下 docker 指令！**
+
+1. 用你的帳號（例如 `admin`）從瀏覽器登入 JupyterHub。
+2. 進入 JupyterLab 介面後，在 **Launcher（啟動頁面）** 點擊 **Terminal（終端機）** 圖示。
+3. 彈出的黑色視窗，**就已經是這個容器的內部了！**
+
+你在這個網頁版 Terminal 裡做的所有操作（包含剛剛教你的設定 Conda 與 Jupyter Kernel），完全等同於你用 `docker exec` 進來做的操作，而且權限剛好對應你這個使用者，是最安全也最方便的做法。
