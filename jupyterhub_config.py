@@ -49,6 +49,9 @@ c.DockerSpawner.volumes = {
 
 
 
+
+c.DockerSpawner.extra_create_kwargs = {'user': 'root'}
+
 # ==========================================
 # 注入環境變數 (自動修改 Conda 的預設路徑到保險箱內)
 # ==========================================
@@ -62,7 +65,11 @@ c.DockerSpawner.environment = {
     'JUPYTER_DATA_DIR': '/home/jovyan/.conda/jupyter_data',
     
     # 3. [加碼保護] 將 pip install --user 裝的套件也導流進來
-    'PYTHONUSERBASE': '/home/jovyan/.conda/local_python'
+    'PYTHONUSERBASE': '/home/jovyan/.conda/local_python',
+    'GRANT_SUDO': '1',        # 啟用免密碼 sudo
+    'CHOWN_HOME': 'yes',      # 啟動時確保 jovyan 擁有家目錄的權限
+    'CHOWN_HOME_OPTS': '-R',
+    'CHOWN_EXTRA': '/home/jovyan'
 }
 
 # ==========================================
